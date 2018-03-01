@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
-var JWT_SECRET = "tempSecret12345"
-
 var UserSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -48,8 +46,7 @@ UserSchema.methods.toJSON = function() {
 UserSchema.methods.generateAuthToken = function() {
     var user = this;
     var access = 'auth';
-    // change the JWT_SECRET param when done
-    var token = jwt.sign({_id: user._id.toHexString(), access}, JWT_SECRET).toString();
+    var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
     user.tokens.push({access, token});
     return user.save().then(() => {
@@ -72,13 +69,8 @@ UserSchema.statics.findByToken = function(token) {
     var decoded;
 
     try {
-        // change the JWT_SECRET param when done
-        decoded = jwt.verify(token, JWT_SECRET);
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
     } catch(e) {
-        // both returns have the same functionality
-        // return new Promise((resolve, reject) => {
-        //     reject();
-        // });
         return Promise.reject();
     }
     

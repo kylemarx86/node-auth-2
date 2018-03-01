@@ -1,3 +1,5 @@
+require('./config/config');
+// LIBRARIES
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,13 +16,13 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-
+// LOCAL
 // using currently
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 
 var app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
